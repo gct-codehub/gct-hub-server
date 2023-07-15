@@ -1,6 +1,8 @@
 import express from "express"
 const router = express.Router()
 
-router.post("/create")
+import { create } from "../controllers/organization";
 
-module.exports=router
+router.post("/create",create);
+
+export default router
