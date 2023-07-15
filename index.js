@@ -13,18 +13,17 @@ app.use(cors());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
+//routes
+
 app.use("/auth", authRoute);
 
-//establish connection to database
-mongoose
-  .connect(process.env.MongodbUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() =>
-    app.listen(process.env.PORT, () => {
-      console.log("listening to port");
-    })
-  )
-  .catch((error) => console.log(error));
+//establish connection to database and start server
 
+app.listen(process.env.PORT, () => {
+  console.log("[+]listening to port "+process.env.PORT);
+  mongoose.connect(process.env.MongodbUrl, {useNewUrlParser: true, useUnifiedTopology: true,})
+  .then(() =>
+    console.log("[+]DB connected")
+  )
+.catch((error) => console.log("[+]DB connection error",error));
+})
