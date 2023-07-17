@@ -1,5 +1,6 @@
 import user from "../models/user.js";
 import bycryt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
@@ -45,5 +46,46 @@ export const register = async (req, res) => {
     return res.json({
       message: e.message,
     });
+  }
+};
+
+export const login = async (req, res) => {
+  try{
+    const mailId = req.body.mailId;
+
+    //validating email id
+    let emailRegExp = new RegExp("[a-z0-9]+@gct+.ac.in");
+    if(!emailRegExp.test( mailId )) {
+      throw {
+        message: "Please enter a GCT mail ID",
+      };
+    }
+
+    //check if email is registered
+    const oldUser = await user.findOne({ mailId });
+    
+    if (!oldUser) throw { message: "Mail ID is not registered. Please register." };
+    else{
+      //authenticate access
+      const validPassword = bycryt.compareSync(
+        req.body.password, user.password
+      );
+
+      if(!validPassword) throw { message: "Invalid Password!" }
+      else {
+        //generating jwt token
+        const token = jwt.sign(
+          user, 
+          process.env.ACCESS_TOKEN,
+          { expiresIn: "1h" }
+        );
+        res.status(200).json({ user, token });
+      }
+    }
+  } catch (e) {
+      console.log("[❌]Error:  ", e);
+      return res.json({
+        message: e.message,
+      });
   }
 };
