@@ -1,5 +1,6 @@
 import OrganizationModel from "../models/organization.js"
 import RoleModel from "../models/role.js"
+import userModel from "../models/user.js"
 
 export async function create(req,res){
     console.log('[+]Creating organization...')
@@ -19,7 +20,7 @@ export async function create(req,res){
 
     res.json({
         error:false,
-        message:"Welcome to the API"
+        message:"Org created..."
     })
 }
 
@@ -87,10 +88,44 @@ export async function createRole(req,res){
 
 }
 
-export function assign(req,res){
-    console.log("[+]Assigning user...")
-    const userRolePair=req.body.userRolePair
-    console.log('[+]User role pair',userRolePair)
+export async function assign(req,res){
+    try{
+        console.log("[+]Assigning user...")
+        const userRolePair=req.body.userRolePair
+        console.log('[+]User role pair',userRolePair)
+
+        for(var userRole of userRolePair){
+            const roleId=userRole.roleId
+            const role =await RoleModel.findById(roleId)
+            if(!role){
+                throw `[+]Invalid role id ${roleId}`
+            }  
+            for(var userId of userRole.userId){
+                const user= await userModel.findById(userId)
+                if(!user){
+                    throw `[+]Invalid user id ${userId}`
+                }
+                console.log("[+]User roles",user.roles.toString().split(","))
+                if(user.roles.toString().split(",").includes(roleId)){
+                    throw "Role already assigned to this user"
+                }
+                user.roles.push(roleId)
+                await user.save()
+                console.log(`[*]${user._id} ${user.name}'s roles are updated`)
+            }
+            
+        }
+        res.json({
+            error:false,
+            message:"[+]Roles updated ..."
+        })
+    }catch(e){
+        console.log('[*]Error in role assignment...',e)
+        res.json({
+            error:true,
+            message:e
+        })
+    }
 }
 
 

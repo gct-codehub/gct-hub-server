@@ -5,6 +5,7 @@ const orgSchema = mongoose.Schema(
     orgName: {
       type: String,
       required: true,
+      unique:true
     },
     desc: {
       type: String,
