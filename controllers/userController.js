@@ -5,22 +5,22 @@ export const uploadProfilePhoto = async (req, res) => {
   try {
     if (req.file) {
       const id = req.params.id;
-      console.log("File uploaded successfully");
 
       //update filename to the database
       const olduser = await user.findByIdAndUpdate(id, {
         profilePhoto: req.file.filename,
       });
-
       //delete old profile photo from storage
       if (olduser.profilePhoto != "defaultProfile.png") {
         fs.unlinkSync(`public/profilePhotos/${olduser.profilePhoto}`);
       }
-
-      return res.status(200).json("File uploaded successfully");
+      console.log("[✅]ProfilePhoto fileName updated successfully");
+      return res.status(200).json("Profilephoto FileName updated successfully");
     }
   } catch (e) {
-    console.log(e);
-    return res.status(500).json({ message: "Failed to upload profile photo." });
+    console.log("[❌]Thrown error ", e);
+    return res
+      .status(500)
+      .json({ error:true,message: "Failed to update profilephoto FileName" });
   }
 };

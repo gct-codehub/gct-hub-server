@@ -27,7 +27,7 @@ app.use("/user", userRoute);
 
 app.listen(process.env.PORT, () => {
   console.log("[+]listening to port "+process.env.PORT);
-  mongoose.connect(process.env.MongodbUrl, {useNewUrlParser: true, useUnifiedTopology: true,})
+  mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopology: true,})
   .then(() =>
     console.log("[+]DB connected")
   )
