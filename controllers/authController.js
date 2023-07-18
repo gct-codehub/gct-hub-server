@@ -47,3 +47,30 @@ export const register = async (req, res) => {
     });
   }
 };
+
+
+export const isSignedIn =async(req,res,next)=>{
+  try{
+      var token = req.headers['authorization'].split(" ")[1]
+      console.log('[+] RequiredSignin ',token)
+      if(token===undefined)throw "User not loggedin"
+      var tokenData = jwt.verify(token,process.env.JWT_SECRET)
+      var tempUser = await user.findById(tokenData.id)
+      // user.password=undefined
+      req.user=tempUser
+      if(!user){
+          throw "user not found"
+      }else{
+          console.log('[+]User trying to login ',user)
+          req.userId=user._id
+      }
+
+  }catch(e){
+      return res.status(403).json({
+          error:true,
+          message:e
+      })
+  }
+
+  next()
+}

@@ -9,19 +9,16 @@ const orgSchema = mongoose.Schema(
     desc: {
       type: String,
     },
+    logo:{
+      type:String,
+    },
+    coverPhoto:{
+      type:String,
+    },
     roles: [
       {
-        accessNumber: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Access",
-        },
-        userId:[{
-          type :mongoose.Schema.Types.ObjectId,
-          ref:"user"
-        }],
-        roleName: {
-          type: String,
-        },
+        type:mongoose.Schema.ObjectId,
+        ref:"Roles"
       },
     ],
   },

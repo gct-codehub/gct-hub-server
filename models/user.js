@@ -26,13 +26,8 @@ const userSchema = mongoose.Schema(
     orgSubscribed: [],
     roles: [
       {
-        orgId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Organizations",
-        },
-        role: {
-          type: String,
-        },
+       type:mongoose.Schema.Types.ObjectId,
+       ref:""
       },
     ],
   },

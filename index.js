@@ -3,8 +3,11 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import bodyParser from "body-parser";
+
+
 import authRoute from "./routes/authRoute.js";
 import orgRoutes from "./routes/organization.js"
+import userRoutes from "./routes/user.js"
 
 dotenv.config();
 
@@ -17,6 +20,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 //routes
 
 app.use("/auth", authRoute);
+app.use("/user",userRoutes);
 app.use('/org', orgRoutes );
 
 //establish connection to database and start server
