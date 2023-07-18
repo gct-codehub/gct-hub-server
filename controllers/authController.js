@@ -46,6 +46,7 @@ export const register = async (req, res) => {
   } catch (e) {
     console.log("[❌]Thrown error ", e);
     return res.status(500).json({
+      error: true,
       message: e.message,
     });
   }
@@ -87,6 +88,7 @@ export const login = async (req, res) => {
         );
         console.log("[✅]user loggedIn Successfully");
         res.status(200).json({
+          error: true,
           message: "User LoggedIn Successfully",
           JWT: JWTtoken,
           user: existingUser,
@@ -96,6 +98,7 @@ export const login = async (req, res) => {
   } catch (e) {
     console.log("[❌]Thrown error ", e);
     return res.status(500).json({
+      error: true,
       message: e.message,
     });
   }

@@ -7,15 +7,15 @@ export const errorHandler = (err, req, res, next) => {
       console.log("[❌]Thrown error ", err);
       return res
         .status(400)
-        .json({ message: "Image size should not exceed 5MB" });
+        .json({ error: true, message: "Image size should not exceed 5MB" });
     }
     // Multer errors
     console.log("[❌]Thrown error ", err);
-    return res.status(400).json({ message: err.message });
+    return res.status(400).json({ error: true, message: err.message });
   } else if (err) {
     // Other errors
     console.log("[❌]Thrown error ", err);
-    return res.status(500).json({ message: err.message });
+    return res.status(500).json({ error: true, message: err.message });
   }
 
   next();

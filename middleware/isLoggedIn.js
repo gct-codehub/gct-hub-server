@@ -15,6 +15,7 @@ export const isLoggedIn = async (req, res, next) => {
   } catch (e) {
     console.log("[❌]Thrown error ", e);
     return res.status(403).json({
+      error:true,
       message: "User is not authorized",
     });
   }

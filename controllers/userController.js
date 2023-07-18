@@ -21,6 +21,6 @@ export const uploadProfilePhoto = async (req, res) => {
     console.log("[❌]Thrown error ", e);
     return res
       .status(500)
-      .json({ message: "Failed to update profilephoto FileName" });
+      .json({ error:true,message: "Failed to update profilephoto FileName" });
   }
 };
