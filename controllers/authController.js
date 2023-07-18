@@ -1,6 +1,8 @@
 import user from "../models/user.js";
-import bycryt from "bcrypt";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const register = async (req, res) => {
   try {
@@ -26,8 +28,8 @@ export const register = async (req, res) => {
       throw { message: "Password needs minimum 8 characters" };
 
     //hash the password
-    const salt = await bycryt.genSalt(10);
-    const hashedPassword = await bycryt.hash(req.body.password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
     //save new user
     const newUser = new user({ ...req.body, password: hashedPassword });
@@ -43,49 +45,58 @@ export const register = async (req, res) => {
       });
   } catch (e) {
     console.log("[❌]Thrown error ", e);
-    return res.json({
+    return res.status(500).json({
       message: e.message,
     });
   }
 };
 
 export const login = async (req, res) => {
-  try{
+  try {
     const mailId = req.body.mailId;
 
     //validating email id
     let emailRegExp = new RegExp("[a-z0-9]+@gct+.ac.in");
-    if(!emailRegExp.test( mailId )) {
+    if (!emailRegExp.test(mailId)) {
       throw {
         message: "Please enter a GCT mail ID",
       };
     }
 
     //check if email is registered
-    const oldUser = await user.findOne({ mailId });
-    
-    if (!oldUser) throw { message: "Mail ID is not registered. Please register." };
-    else{
+    const existingUser = await user.findOne({ mailId });
+
+    if (!existingUser)
+      throw { message: "Mail ID is not registered. Please register." };
+    else {
       //authenticate access
-      const validPassword = bycryt.compareSync(
-        req.body.password, user.password
+      const validPassword = bcrypt.compareSync(
+        req.body.password,
+        existingUser.password
       );
 
-      if(!validPassword) throw { message: "Invalid Password!" }
+      if (!validPassword) throw { message: "Password is wrong" };
       else {
         //generating jwt token
-        const token = jwt.sign(
-          user, 
-          process.env.ACCESS_TOKEN,
-          { expiresIn: "1h" }
+        const JWTtoken = jwt.sign(
+          { id: existingUser._id },
+          process.env.JWT_SECRET_KEY,
+          {
+            expiresIn: "1h",
+          }
         );
-        res.status(200).json({ user, token });
+        console.log("[✅]user loggedIn Successfully");
+        res.status(200).json({
+          message: "User LoggedIn Successfully",
+          JWT: JWTtoken,
+          user: existingUser,
+        });
       }
     }
   } catch (e) {
-      console.log("[❌]Error:  ", e);
-      return res.json({
-        message: e.message,
-      });
+    console.log("[❌]Thrown error ", e);
+    return res.status(500).json({
+      message: e.message,
+    });
   }
 };

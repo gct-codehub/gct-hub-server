@@ -21,6 +21,7 @@ export const upload = multer({
     // Check if the file type is an image
     if (file.mimetype.startsWith("image/")) {
       cb(null, true); // Allow the file to be uploaded
+      console.log("[✅]ProfilePhotoImage uploaded successfully");
     } else {
       cb(new Error("Only images are allowed!"), false); // Reject the file
     }

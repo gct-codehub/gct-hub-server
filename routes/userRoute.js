@@ -6,6 +6,6 @@ import { upload } from "../controllers/multerController.js";
 
 const router = express.Router();
 
-router.post("/uploadProfilePhoto/:id",upload.single("file"), isLoggedIn, errorHandler, uploadProfilePhoto);
+router.post("/uploadProfilePhoto/:id", isLoggedIn,upload.single("file"), errorHandler, uploadProfilePhoto);
 
 export default router;

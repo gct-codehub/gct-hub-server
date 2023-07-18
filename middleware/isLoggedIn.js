@@ -7,13 +7,15 @@ export const isLoggedIn = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     if (token) {
-      const decoded = jwt.verify(token, process.env.JWT_KEY);
-      req.params.id = decoded?._id;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      req.params.id = decoded?.id;
     }
+    console.log("[✅]User authorized successfully");
     next();
   } catch (e) {
+    console.log("[❌]Thrown error ", e);
     return res.status(403).json({
-      message: "User not authorized",
+      message: "User is not authorized",
     });
   }
 };
