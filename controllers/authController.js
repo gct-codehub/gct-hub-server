@@ -68,23 +68,25 @@ export const login = async (req, res) => {
     else{
       //authenticate access
       const validPassword = bycryt.compareSync(
-        req.body.password, user.password
+        req.body.password, oldUser.password
       );
 
       if(!validPassword) throw { message: "Invalid Password!" }
       else {
         //generating jwt token
+        console.log('[+]Access secret ',process.env.ACCESS_TOKEN)
         const token = jwt.sign(
-          user, 
+          {_id:oldUser._id}, 
           process.env.ACCESS_TOKEN,
           { expiresIn: "1h" }
         );
-        res.status(200).json({ user, token });
+        res.status(200).json({ error:false,oldUser, token });
       }
     }
   } catch (e) {
       console.log("[❌]Error:  ", e);
       return res.json({
+        error:true,
         message: e.message,
       });
   }
