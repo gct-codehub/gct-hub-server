@@ -15,6 +15,10 @@ const orgSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Access",
         },
+        userId:[{
+          type :mongoose.Schema.Types.ObjectId,
+          ref:"user"
+        }],
         roleName: {
           type: String,
         },
