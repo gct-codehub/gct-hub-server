@@ -88,7 +88,6 @@ export const login = async (req, res) => {
         );
         console.log("[✅]user loggedIn Successfully");
         res.status(200).json({
-          error: true,
           message: "User LoggedIn Successfully",
           JWT: JWTtoken,
           user: existingUser,
