@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import bodyParser from "body-parser";
 import authRoute from "./routes/authRoute.js";
+import userRoute from "./routes/userRoute.js";
 
 dotenv.config();
 
@@ -13,9 +14,14 @@ app.use(cors());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
-//routes
+//configure multer
+app.use(express.static("public"));
+app.use("/profilePhotos", express.static("profilePhotos"));
 
+
+//routes
 app.use("/auth", authRoute);
+app.use("/user", userRoute);
 
 //establish connection to database and start server
 
