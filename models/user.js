@@ -23,7 +23,12 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    orgSubscribed: [],
+    orgSubscribed: [{
+      orgId:{
+        type :mongoose.Schema.Types.ObjectId ,
+        ref:"Organizations"
+      }
+    }],
     roles: [
       {
         orgId: {
