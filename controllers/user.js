@@ -2,12 +2,12 @@
 import userModel from "../models/user.js";
 
 export async function search(req,res){
-    const {email,rollno,name} =req.body;
+    const {mailId,rollno,name} =req.body;
 
-    console.log('[+]data for searching ',email,rollno,name)
+    console.log('[+]data for searching ',mailId,rollno,name)
     var user;
-    if(email){
-       user = await userModel.find({mailId:new RegExp(email, 'i')})
+    if(mailId){
+       user = await userModel.find({mailId:new RegExp(mailId, 'i')})
        console.log('[+]Searched user ',user)
  
     }
