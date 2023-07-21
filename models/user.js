@@ -31,13 +31,8 @@ const userSchema = mongoose.Schema(
     }],
     roles: [
       {
-        orgId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Organizations",
-        },
-        role: {
-          type: String,
-        },
+       type:mongoose.Schema.Types.ObjectId,
+       ref:""
       },
     ],
     profilePhoto: {

@@ -3,8 +3,11 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import bodyParser from "body-parser";
+
+
 import authRoute from "./routes/authRoute.js";
-import userRoute from "./routes/userRoute.js";
+import orgRoutes from "./routes/organization.js"
+import userRoutes from "./routes/user.js"
 
 dotenv.config();
 
@@ -21,7 +24,8 @@ app.use("/profilePhotos", express.static("profilePhotos"));
 
 //routes
 app.use("/auth", authRoute);
-app.use("/user", userRoute);
+app.use("/user",userRoutes);
+app.use('/org', orgRoutes );
 
 //establish connection to database and start server
 
