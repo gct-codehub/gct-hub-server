@@ -26,7 +26,7 @@ const userSchema = mongoose.Schema(
     orgSubscribed: [{
       orgId:{
         type :mongoose.Schema.Types.ObjectId ,
-        ref:"Organizations"
+        ref:"organizations"
       }
     }],
     roles: [

@@ -2,6 +2,10 @@ import user from "../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+
+import OrganizationModel from "../models/organization.js";
+import RoleModel from "../models/role.js";
+
 dotenv.config();
 
 export const register = async (req, res) => {
@@ -105,11 +109,15 @@ export const login = async (req, res) => {
 
 
 export const isSignedIn =async(req,res,next)=>{
+  console.log('[+]Signin controller')
   try{
+    if(!req.headers['authorization']){
+      throw "token not found"
+    }
       var token = req.headers['authorization'].split(" ")[1]
       console.log('[+] RequiredSignin ',token)
       if(token===undefined)throw "User not loggedin"
-      var tokenData = jwt.verify(token,process.env.JWT_SECRET)
+      var tokenData = jwt.verify(token,process.env.JWT_SECRET_KEY)
       var tempUser = await user.findById(tokenData.id)
       // user.password=undefined
       req.user=tempUser
@@ -128,4 +136,13 @@ export const isSignedIn =async(req,res,next)=>{
   }
 
   next()
+}
+
+
+export const accessFilter= (access)=>{
+  return async (req,res,next)=>{
+    console.log('[+]User ',req.user._id)
+    const needUser =await user.findById(req.user._id).populate("roles").exec()
+    console.log('[+]Access filter active',needUser)
+  }
 }
