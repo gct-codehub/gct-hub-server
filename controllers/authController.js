@@ -1,10 +1,23 @@
 import user from "../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import joi from "joi";
+import passwordComplexity from "joi-password-complexity";
 import dotenv from "dotenv";
 dotenv.config();
 
 export const register = async (req, res) => {
+  const validate = (data) => {
+    const schema = joi.object({
+      name: joi.string().required().label("name"),
+      department: joi.string().required().label("department"),
+      mailId: joi.string().email().required().label("mailId"),
+      password: passwordComplexity().required().label("password"),
+      confirmpass: joi.string().required().label("confirmpass"),
+    });
+    return schema.validate(data);
+  };
+
   try {
     // validate email
     let emailRegExp = new RegExp("[a-z0-9]+@gct+.ac.in");
@@ -19,9 +32,9 @@ export const register = async (req, res) => {
     const oldUser = await user.findOne({ mailId });
     if (oldUser) throw { message: "Given mail ID is already registered" };
 
-    //check wether password and conform password fields are same
-    if (req.body.password != req.body.confirmpass)
-      throw { message: "Password and Confirm password are not same" };
+    //validate password using joi
+    const { error } = validate(req.body);
+    if (error) throw { message: error.details[0].message };
 
     //password needs to be minimum 8 character long
     if (req.body.password.length < 8)
@@ -102,3 +115,30 @@ export const login = async (req, res) => {
     });
   }
 };
+
+
+export const isSignedIn =async(req,res,next)=>{
+  try{
+      var token = req.headers['authorization'].split(" ")[1]
+      console.log('[+] RequiredSignin ',token)
+      if(token===undefined)throw "User not loggedin"
+      var tokenData = jwt.verify(token,process.env.JWT_SECRET)
+      var tempUser = await user.findById(tokenData.id)
+      // user.password=undefined
+      req.user=tempUser
+      if(!user){
+          throw "user not found"
+      }else{
+          console.log('[+]User trying to login ',user)
+          req.userId=user._id
+      }
+
+  }catch(e){
+      return res.status(403).json({
+          error:true,
+          message:e
+      })
+  }
+
+  next()
+}
