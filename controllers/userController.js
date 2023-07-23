@@ -58,23 +58,19 @@ export const updateUserData = async ( req, res ) => {
     const department = req.body.department;
     const year = req.body.year;
 
-    if( !( new RegExp("^[ A-Za-z]+$").test(name) && 
-          new RegExp("[A-Za-z]").test(name) ) ) {
+    if( !( new RegExp("^[ A-Za-z]+$").test(name) ) ) {
       throw { message: "Enter a valid Name"};
-    } else {
-
     }
 
-    if( !( new RegExp("^\d+$").test(rollNum) ) ) {
+    if( !( new RegExp("^[ \d]+$").test(rollNum) ) ) {
       throw { message: "Enter a valid Roll Number" };
     }
 
-    if( !( new RegExp("^[ A-Za-z]+$").test(department) && 
-        new RegExp("[A-Za-z]").test(department) ) ) {
+    if( !( new RegExp("^[ A-Za-z]+$").test(department) ) ) {
       throw { message: "Enter a valid Department" };
     }
     
-    if( ! new RegExp("^(19|20)\d{2}$").test(year) ) {
+    if( !( new RegExp("^(19|20)\d{2}$").test(year) || new RegExp("^\s+$").test(year)) ) {
       throw { message: "Enter a valid Year" };
     }
 
