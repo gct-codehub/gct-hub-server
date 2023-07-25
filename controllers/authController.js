@@ -3,8 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
-import OrganizationModel from "../models/organization.js";
-import RoleModel from "../models/role.js";
+
 
 dotenv.config();
 
@@ -138,11 +137,3 @@ export const isSignedIn =async(req,res,next)=>{
   next()
 }
 
-
-export const accessFilter= (access)=>{
-  return async (req,res,next)=>{
-    console.log('[+]User ',req.user._id)
-    const needUser =await user.findById(req.user._id).populate("roles").exec()
-    console.log('[+]Access filter active',needUser)
-  }
-}

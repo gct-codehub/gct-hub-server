@@ -26,13 +26,13 @@ const userSchema = mongoose.Schema(
     orgSubscribed: [{
       orgId:{
         type :mongoose.Schema.Types.ObjectId ,
-        ref:"organizations"
+        ref:"Organizations"
       }
     }],
     roles: [
       {
        type:mongoose.Schema.Types.ObjectId,
-       ref:""
+       ref:"Role"
       },
     ],
     profilePhoto: {
